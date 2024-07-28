@@ -1,0 +1,40 @@
+services:
+  registry-server:
+    image: registry:2
+    restart: always
+    ports:
+      - 6969:5000
+    environment:
+      REGISTRY_HTTP_HEADERS_Access-Control-Allow-Origin: '["http://localhost:6868"]'
+      REGISTRY_HTTP_HEADERS_Access-Control-Allow-Methods: '[HEAD,GET,OPTIONS,DELETE]'
+      REGISTRY_HTTP_HEADERS_Access-Control-Allow-Credentials: '[true]'
+      REGISTRY_HTTP_HEADERS_Access-Control-Allow-Headers: '[Authorization,Accept,Cache-Control]'
+      REGISTRY_HTTP_HEADERS_Access-Control-Expose-Headers: '[Docker-Content-Digest]'
+      REGISTRY_STORAGE_DELETE_ENABLED: 'true'
+    volumes:
+      - $HOME/.registry:/var/lib/registry
+    networks:
+      - registry-ui-net
+    container_name: registry-server
+
+  registry-ui:
+    image: joxit/docker-registry-ui:main
+    restart: always
+    depends_on:
+      - registry-server
+    ports:
+      - 6868:80
+    environment:
+      - REGISTRY_URL=http://localhost:6969
+      - SINGLE_REGISTRY=true
+      - DELETE_IMAGES=true
+      - SHOW_CONTENT_DIGEST=true
+      - NGINX_PROXY_PASS_URL=http://registry-server:5000
+      - SHOW_CATALOG_NB_TAGS=true
+      - REGISTRY_SECURED=false
+    networks:
+      - registry-ui-net
+    container_name: registry-ui
+
+networks:
+  registry-ui-net:
