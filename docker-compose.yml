@@ -1,4 +1,9 @@
+networks:
+  registry-ui-net:
+
 services:
+
+  # Container registry server
   registry-server:
     image: registry:2
     restart: always
@@ -12,11 +17,12 @@ services:
       REGISTRY_HTTP_HEADERS_Access-Control-Expose-Headers: '[Docker-Content-Digest]'
       REGISTRY_STORAGE_DELETE_ENABLED: 'true'
     volumes:
-      - $HOME/.registry:/var/lib/registry
+      - ~/.registry:/var/lib/registry
     networks:
       - registry-ui-net
     container_name: registry-server
 
+  # Registry user interface
   registry-ui:
     image: joxit/docker-registry-ui:main
     restart: always
@@ -35,6 +41,3 @@ services:
     networks:
       - registry-ui-net
     container_name: registry-ui
-
-networks:
-  registry-ui-net:
