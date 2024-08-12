@@ -25,4 +25,12 @@ docker push localhost:6969/my-image-name:latest
 
 If you don't use the `localhost:6969` prefix, the docker command will default to use docker hub. In some cases you may not want that.
 
+
+### Pull from registry
+If you're using minikube, you start minikube like this:
+```sh
+minikube start --insecure-registry "192.168.1.213:6969"
+```
+Replacing `192.168.1.213` with the IP where your registry is running.
+
 And remember, if pulling a tag from *outside* of your development environment (like, via K8s), use the ip address or hostname of that machine: `docker pull 192.168.1.213:6969/my-image-name:latest`
