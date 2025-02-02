@@ -33,7 +33,7 @@ minikube start --insecure-registry "192.168.1.213:6969"
 ```
 Replacing `192.168.1.213` with the IP where your registry is running.
 
-If you're running k3s or k8s on a home server, make sure to let the container run-time to use insecure repositories (because this server runs unsecure. I know, I know...)
+If you're running k3s or k8s on a home server and want to fetch images from this registry, make sure to let the container run-time to use insecure repositories (because this server runs insecure. I know, I know...)
 For k3s (using containerd), create the file `/etc/rancher/k3s/registries.yaml` and use this config:
 ```yaml
 mirrors:
@@ -46,7 +46,10 @@ configs:
       insecure_skip_verify: true
 ```
 
-For other installs using docker, update the dockerconfig file. Good luck, homie.
+If you're building images from your Mac using Docker, let docker know you are pushing to an insecure registry. Add this to your `~/.docker/daemon.json`:
+```json
+{ "insecure-registries": [ "192.168.1.213:6969" ] }
+```
 
 Oh and remember, if pulling a tag from *outside* of your development environment (like, via K8s), use the ip address or hostname of that machine in your network: `docker pull 192.168.1.213:6969/my-image-name:latest`
 
