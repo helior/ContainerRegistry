@@ -7,7 +7,8 @@ The simplest implementation is the built-in docker registry server. View the `do
 docker compose -f docker-compose.yml up
 ```
 
-Now visit http://localhost:6868/ to access the dashboard 🎉
+Now visit http://192.168.1.213:6868 to access the dashboard 🎉
+❗️Note: accessing actual IP address is a limitation of parsing issue using a list of URLs to CORS. I would to also add localhost:6868.
 
 ### Important Note
 From a K8s node perspective, `localhost` will NOT resolve to your local development environment. You will have to push and pull to the IP address or hostname of your development computer in your network. Try `ifconfig | grep 192.168` to see what your machine is using on the current network. As an example, I'll use `192.168.1.213`
@@ -50,6 +51,8 @@ If you're building images from your Mac using Docker, let docker know you are pu
 ```json
 { "insecure-registries": [ "192.168.1.213:6969" ] }
 ```
+
+Run `docker info` to confirm, otherwise restart Docker.
 
 Oh and remember, if pulling a tag from *outside* of your development environment (like, via K8s), use the ip address or hostname of that machine in your network: `docker pull 192.168.1.213:6969/my-image-name:latest`
 
